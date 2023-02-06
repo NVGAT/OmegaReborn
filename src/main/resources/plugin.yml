@@ -1,0 +1,7 @@
+name: OmegaReborn
+version: '${project.version}'
+main: com.notverygoodatthis.omegareborn.OmegaReborn
+api-version: 1.19
+authors: [ NotVeryGoodAtThis ]
+description: The brand-new, completely rewritten Omega SMP plugin. This changes everything.
+website: https://www.youtube.com/@NotVeryGoodAtThis
