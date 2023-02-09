@@ -5,3 +5,18 @@ api-version: 1.19
 authors: [ NotVeryGoodAtThis ]
 description: The brand-new, completely rewritten Omega SMP plugin. This changes everything.
 website: https://www.youtube.com/@NotVeryGoodAtThis
+
+commands:
+  omegaitem:
+    description: Gives an operator a specified Omega item (ADMIN ONLY)
+    usage: /<command>
+    permission: omegasmp.admin
+
+  omegawithdraw:
+    description: Withdraws one of your lives in an item form.
+    usage: /<command>
+
+  omegaset:
+    description: Sets a player's lives (ADMIN ONLY)
+    usage: /<command>
+    permission: omegasmp.admin
