@@ -50,6 +50,7 @@ public class OmegaPlayer {
     }
 
     public void omegaBan() {
+        player.getInventory().clear();
         Random random = new Random();
         player.getWorld().dropItemNaturally(player.getLocation(), getOmegaItem(OmegaReborn.OmegaItemType.SHARD, random.nextInt(8)));
         String reason = String.format("§bYou've lost your last life to %s. Thank you for playing on the Omega SMP.", player.getKiller().getName());
@@ -58,6 +59,7 @@ public class OmegaPlayer {
     }
 
     public void lifeBan() {
+        player.getInventory().clear();
         Random random = new Random();
         player.getWorld().dropItemNaturally(player.getLocation(), getOmegaItem(OmegaReborn.OmegaItemType.SHARD, random.nextInt(8)));
         String reason = "You've withdrawn your last life. Thank you for playing on the Omega SMP.";

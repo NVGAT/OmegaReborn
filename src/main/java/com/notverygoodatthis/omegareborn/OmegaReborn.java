@@ -191,7 +191,7 @@ public final class OmegaReborn extends JavaPlugin implements Listener {
                 opItem.setItemMeta(meta);
                 break;
             case SHARD:
-                opItem.setType(Material.FIRE);
+                opItem.setType(Material.FIREWORK_STAR);
                 ItemMeta shardMeta = opItem.getItemMeta();
                 shardMeta.setDisplayName("§l§bOmega Shard");
                 opItem.setItemMeta(shardMeta);
@@ -247,17 +247,17 @@ public final class OmegaReborn extends JavaPlugin implements Listener {
     }
 
     public ShapedRecipe omegaSwordRecipe() {
-        ItemStack sword = getOmegaItem(OmegaItemType.HELMET, 1);
+        ItemStack sword = getOmegaItem(OmegaItemType.SWORD, 1);
         NamespacedKey key = new NamespacedKey(this, "netherite_sword");
         ShapedRecipe rec = new ShapedRecipe(key, sword);
         rec.shape("SSS", "SHS", "SSS");
         rec.setIngredient('S', new RecipeChoice.ExactChoice(getOmegaItem(OmegaItemType.SHARD, 1)));
-        rec.setIngredient('H', Material.NETHERITE_HELMET);
+        rec.setIngredient('H', Material.NETHERITE_SWORD);
         return rec;
     }
 
     public ShapedRecipe omegaAxeRecipe() {
-        ItemStack axe = getOmegaItem(OmegaItemType.HELMET, 1);
+        ItemStack axe = getOmegaItem(OmegaItemType.AXE, 1);
         NamespacedKey key = new NamespacedKey(this, "netherite_axe");
         ShapedRecipe rec = new ShapedRecipe(key, axe);
         rec.shape("SSS", "SHS", "SSS");
@@ -277,7 +277,7 @@ public final class OmegaReborn extends JavaPlugin implements Listener {
     }
 
     public ShapedRecipe omegaPickRecipe() {
-        ItemStack fortune = getOmegaItem(OmegaItemType.HELMET, 1);
+        ItemStack fortune = getOmegaItem(OmegaItemType.PICKAXE_FORTUNE, 1);
         NamespacedKey key = new NamespacedKey(this, "netherite_pickaxe");
         ShapedRecipe rec = new ShapedRecipe(key, fortune);
         rec.shape("SSS", "SHS", "SSS");
@@ -292,7 +292,7 @@ public final class OmegaReborn extends JavaPlugin implements Listener {
         ShapedRecipe rec = new ShapedRecipe(key, apple);
         rec.shape("SSS", "SHS", "SSS");
         rec.setIngredient('S', new RecipeChoice.ExactChoice(getOmegaItem(OmegaItemType.SHARD, 1)));
-        rec.setIngredient('H', Material.APPLE);
+        rec.setIngredient('H', Material.ENCHANTED_GOLDEN_APPLE);
         return rec;
     }
 
