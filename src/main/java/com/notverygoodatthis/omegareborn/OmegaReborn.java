@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public final class OmegaReborn extends JavaPlugin implements Listener {
+    //Pre-defined variables used later, such as the main HashMap, Omega Prefix and the OmegaItemType enumerator
     public static HashMap<String, Integer> lifeMap = new HashMap<>();
     public static final String OMEGA_PREFIX = "§l§b";
     List<Player> omegaGappledPlayers = new ArrayList<>();
@@ -41,25 +42,31 @@ public final class OmegaReborn extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        //Registers the event listeners
         Bukkit.getPluginManager().registerEvents(this, this);
+        //Loads all the players and their lives
         List<String> playerList = (List<String>) getConfig().getList("players");
         List<Integer> lifeList = (List<Integer>) getConfig().getList("lives");
         for(String s : playerList) {
+            //Loads all of the player names and lives
             lifeMap.put(s, lifeList.get(playerList.indexOf(s)));
+            //Logs the lives and players
             getLogger().info(String.format("%s has %d lives.", s, lifeList.get(playerList.indexOf(s))));
         }
+        //Registers the recipes and commands
         registerRecipes();
         registerCommands();
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
+        //When a player joins, if they're new they're greeted by a chat message.
         if(!lifeMap.keySet().contains(e.getPlayer().getName())) {
             lifeMap.put(e.getPlayer().getName(), 5);
-            e.getPlayer().sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "Welcome to the Omega SMP! You have" +
-                    " five lives which you lose upon dying to a player. Lose all of them and good things don't " +
-                    "happen. Have fun!");
+            e.getPlayer().sendMessage(String.format("%sWelcome to the Omega SMP! You have five lives which you lose upon dying to " +
+                    "a player. Lose all five and you're banned. Have fun!", OMEGA_PREFIX));
         }
+        //And then we update everyone's tablist
         for(Player p : getServer().getOnlinePlayers()) {
             OmegaPlayer omegaPlayer = new OmegaPlayer(p);
             omegaPlayer.updateTablist();
