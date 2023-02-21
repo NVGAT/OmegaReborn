@@ -1,5 +1,4 @@
 package com.notverygoodatthis.omegareborn;
-import com.sun.tools.javac.util.Names;
 import dev.dbassett.skullcreator.SkullCreator;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
@@ -19,7 +18,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import javax.xml.stream.events.Namespace;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -88,17 +86,26 @@ public final class OmegaReborn extends JavaPlugin implements Listener {
         }
     }
 
+    //OnPlayerConsume event, used for omega apples
     @EventHandler
     public void onPlayerConsume(PlayerItemConsumeEvent e) {
+        //First we get the item in the player's main hand
         ItemStack item = e.getPlayer().getInventory().getItemInMainHand();
+        //If the item is an omega apple
         if(item.hasItemMeta() && item.getItemMeta().getDisplayName().equals(getOmegaItem(OmegaItemType.APPLE, 1).getItemMeta().getDisplayName())) {
+            //And the player currently isn't omega gappled...
             if(!omegaGappledPlayers.contains(e.getPlayer())) {
+                //We add the player to the omegaGappledPlayers list
                 omegaGappledPlayers.add(e.getPlayer());
+                //Then we create a new OmegaPlayer instance, give it potion effects and message it saying that they've eaten an
+                //omega apple and that they won't be able to for five minutes
                 OmegaPlayer player = new OmegaPlayer(e.getPlayer());
                 player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 20 * 60, 5));
                 player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 60, 3));
                 player.getPlayer().sendMessage("§l§bYou've been buffed from eating an Omega apple. You can eat another one in five minutes.");
                 Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+                    //Then we schedule a task to run in five minutes that will remove the current player from the omegaGappledPlayers
+                    //list and tell them that they may eat another omega apple.
                     @Override
                     public void run() {
                         omegaGappledPlayers.remove(e.getPlayer());
@@ -106,22 +113,33 @@ public final class OmegaReborn extends JavaPlugin implements Listener {
                     }
                 }, 20L * 300);
             } else {
+                //If the list contains the current player we notify them that they can't eat another omega apple yet.
                 e.getPlayer().sendMessage("§l§bYour Omega apple cooldown is still active. Default god apple effects applied.");
             }
         }
     }
 
+    //OnPlayerInteract event, used for life items
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
+        //First we get the currently held item
         ItemStack item = e.getPlayer().getInventory().getItemInMainHand();
+        //If the item is a life item
         if(item.hasItemMeta() && item.getItemMeta().getDisplayName().equals(getOmegaItem(OmegaItemType.LIFE, 1).getItemMeta().getDisplayName())) {
+            //And the player right clicked
             if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                //We cast the current player into an OmegaPlayer object
                 OmegaPlayer p = new OmegaPlayer(e.getPlayer());
+                //And we try to set their lives.
                 if(p.setLives(p.getLives() + 1) == OmegaPlayer.LifeOutcome.SUCCESS) {
+                    //If setting the lives succeeds, we notify the player that they've applied a life item and log it into the
+                    //server console. We also take away one life item.
                     p.getPlayer().sendMessage(String.format("%sYou've applied one life, bringing you up to %d", OMEGA_PREFIX, p.getLives()));
                     getLogger().info(String.format("%s%s has applied a life item, bringing their life count up to %d", OMEGA_PREFIX, p.getPlayer().getName(), p.getLives()));
                     p.getPlayer().getInventory().getItemInMainHand().setAmount(item.getAmount() - 1);
                 } else {
+                    //However, if setting the lives fails we notify the player that they've failed to apply a life item and log
+                    //it into the server console
                     p.getPlayer().sendMessage(String.format("%sYou already have the maximum amount of lives.", OMEGA_PREFIX));
                     getLogger().info(String.format("%s%s has failed to apply a life item.", OMEGA_PREFIX, p.getPlayer().getName()));
                 }
@@ -130,6 +148,8 @@ public final class OmegaReborn extends JavaPlugin implements Listener {
     }
 
     public static ItemStack getOmegaItem(OmegaItemType type, int amount) {
+        //Basic getter for any omega item, makes things miles easier down the road. It uses the OmegaItemType enumerator to
+        //determine which item the user wants to get
         ItemStack opItem = new ItemStack(Material.AIR, amount);
         switch (type) {
             case HELMET:
@@ -220,6 +240,8 @@ public final class OmegaReborn extends JavaPlugin implements Listener {
         return opItem;
     }
 
+    //region recipes
+    //Basic recipes for the Omega items
     public ShapedRecipe omegaHelmetRecipe() {
         ItemStack helmet = getOmegaItem(OmegaItemType.HELMET, 1);
         NamespacedKey key = new NamespacedKey(this, "netherite_helmet");
@@ -357,8 +379,10 @@ public final class OmegaReborn extends JavaPlugin implements Listener {
         Bukkit.removeRecipe(new NamespacedKey(this, "player_head"));
         Bukkit.removeRecipe(new NamespacedKey(this, "firework_star"));
     }
+    //endregion
 
     void registerCommands() {
+        //Registers all the commands on startup
         getCommand("omegaitem").setExecutor(new OmegaItemCommand());
         getCommand("omegawithdraw").setExecutor(new OmegaWithdrawCommand());
         getCommand("omegaset").setExecutor(new OmegaSetCommand());
@@ -367,10 +391,12 @@ public final class OmegaReborn extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
+        //While disabling the plugin, we save all of the lives into their respected lists in the config
         getConfig().set("players", new ArrayList<String>(lifeMap.keySet()));
         getConfig().set("lives", new ArrayList<Integer>(lifeMap.values()));
         saveConfig();
         saveDefaultConfig();
+        //And we remove the recipes. This isn't necessary but it makes things easier while using plugins such as PlugManX.
         removeRecipes();
     }
 }
