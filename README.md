@@ -12,7 +12,7 @@ Minecraft server software while maintaining stability and longevity. It also uti
 some third-party libraries like SkullCreator.
 
 ## How do I install this?
-#### DISCLAIMER: This plugin's native server software is SpigotMC for 1.19. Everything else, such as other softwares (Paper, Purpur, Mirai and so on) MIGHT WORK, but you should be aware that you're using the product AS-IS. Do not contact me about faulty behavior if you're using a less-known server software (everything besides Spigot, Paper and Purpur) or versions older than 1.19.
+#### DISCLAIMER: This plugin's native server software is SpigotMC for 1.19. Everything else, such as other softwares (Paper, Purpur, Mirai and so on) or other versions (everything before or after 1.19) MIGHT WORK, but you should be aware that you're using the product AS-IS. Do not contact me about faulty behavior if you're using a less-known server software (everything besides Spigot, Paper and Purpur) or versions older than 1.19.
 Glad you're interested!\
 First of all you'll need a Minecraft server. For this we will
 be using the very server software that's currently being used on the Omega SMP, which
