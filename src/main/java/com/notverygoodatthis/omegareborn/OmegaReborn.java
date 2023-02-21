@@ -1,4 +1,6 @@
 package com.notverygoodatthis.omegareborn;
+import com.sun.tools.javac.util.Names;
+import dev.dbassett.skullcreator.SkullCreator;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -17,6 +19,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import javax.xml.stream.events.Namespace;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +40,8 @@ public final class OmegaReborn extends JavaPlugin implements Listener {
         PICKAXE_FORTUNE,
         APPLE,
         SHARD,
-        LIFE
+        LIFE,
+        HEAD
     }
 
     @Override
@@ -62,7 +66,7 @@ public final class OmegaReborn extends JavaPlugin implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         //When a player joins, if they're new they're greeted by a chat message.
         if(!lifeMap.keySet().contains(e.getPlayer().getName())) {
-            lifeMap.put(e.getPlayer().getName(), 5);
+            lifeMap.put(e.getPlayer().getName(), 3);
             e.getPlayer().sendMessage(String.format("%sWelcome to the Omega SMP! You have five lives which you lose upon dying to " +
                     "a player. Lose all five and you're banned. Have fun!", OMEGA_PREFIX));
         }
@@ -206,6 +210,12 @@ public final class OmegaReborn extends JavaPlugin implements Listener {
                 lifeMeta.setDisplayName("§l§bLife");
                 opItem.setItemMeta(lifeMeta);
                 break;
+            case HEAD:
+                opItem = SkullCreator.itemFromBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTQ2MDdhZThhNmY5Mzc0MmU4ZWIxNmEwZjg2MjY1OWUzMDg3NjEwMTlhMzk3NzIyYzFhZmU4NGIxNzlkMWZhMiJ9fX0=");
+                ItemMeta headMeta = opItem.getItemMeta();
+                headMeta.setDisplayName(String.format("%sRevival head", OMEGA_PREFIX));
+                opItem.setItemMeta(headMeta);
+                break;
         }
         return opItem;
     }
@@ -300,6 +310,26 @@ public final class OmegaReborn extends JavaPlugin implements Listener {
         return rec;
     }
 
+    public ShapedRecipe revivalHeadRecipe() {
+        ItemStack head = getOmegaItem(OmegaItemType.HEAD, 1);
+        NamespacedKey key = new NamespacedKey(this, "player_head");
+        ShapedRecipe rec = new ShapedRecipe(key, head);
+        rec.shape("SSS", "SES", "SSS");
+        rec.setIngredient('S', new RecipeChoice.ExactChoice(getOmegaItem(OmegaItemType.SHARD, 1)));
+        rec.setIngredient('E', Material.ELYTRA);
+        return rec;
+    }
+    public ShapedRecipe lifeItemRecipe() {
+        ItemStack life = getOmegaItem(OmegaItemType.LIFE, 1);
+        NamespacedKey key = new NamespacedKey(this, "firework_star");
+        ShapedRecipe rec = new ShapedRecipe(key, life);
+        rec.shape("TRT", "RER", "TRT");
+        rec.setIngredient('R', Material.RECOVERY_COMPASS);
+        rec.setIngredient('T', Material.TOTEM_OF_UNDYING);
+        rec.setIngredient('E', Material.ELYTRA);
+        return rec;
+    }
+
     void registerRecipes() {
         Bukkit.addRecipe(omegaAppleRecipe());
         Bukkit.addRecipe(omegaHelmetRecipe());
@@ -310,6 +340,8 @@ public final class OmegaReborn extends JavaPlugin implements Listener {
         Bukkit.addRecipe(omegaLeggingsRecipe());
         Bukkit.addRecipe(omegaPickRecipe());
         Bukkit.addRecipe(omegaSwordRecipe());
+        Bukkit.addRecipe(revivalHeadRecipe());
+        Bukkit.addRecipe(lifeItemRecipe());
     }
 
     void removeRecipes() {
@@ -322,12 +354,15 @@ public final class OmegaReborn extends JavaPlugin implements Listener {
         Bukkit.removeRecipe(new NamespacedKey(this, "netherite_pickaxe"));
         Bukkit.removeRecipe(new NamespacedKey(this, "bow"));
         Bukkit.removeRecipe(new NamespacedKey(this, "apple"));
+        Bukkit.removeRecipe(new NamespacedKey(this, "player_head"));
+        Bukkit.removeRecipe(new NamespacedKey(this, "firework_star"));
     }
 
     void registerCommands() {
         getCommand("omegaitem").setExecutor(new OmegaItemCommand());
         getCommand("omegawithdraw").setExecutor(new OmegaWithdrawCommand());
         getCommand("omegaset").setExecutor(new OmegaSetCommand());
+        getCommand("omegarevive").setExecutor(new OmegaReviveCommand());
     }
 
     @Override

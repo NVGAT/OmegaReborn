@@ -29,7 +29,8 @@ public class OmegaItemCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        String[] enumValues = {"HELMET", "CHESTPLATE", "LEGGINGS", "BOOTS", "SWORD", "BOW", "PICKAXE", "APPLE"};
+        String[] enumValues = {"HELMET", "CHESTPLATE", "LEGGINGS", "BOOTS", "SWORD", "BOW",
+                "PICKAXE", "APPLE", "SHARD", "LIFE", "HEAD"};
         return new ArrayList<String>(Arrays.asList(enumValues));
     }
 }

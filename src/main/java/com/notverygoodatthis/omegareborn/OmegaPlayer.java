@@ -26,7 +26,7 @@ public class OmegaPlayer {
     }
 
     public LifeOutcome setLives(int newLives) {
-        if(newLives <= 5) {
+        if(newLives <= 3) {
             OmegaReborn.lifeMap.remove(player.getName(), OmegaReborn.lifeMap.get(player));
             OmegaReborn.lifeMap.put(player.getName(), newLives);
             Bukkit.getPluginManager().getPlugin("OmegaReborn").getConfig().set("players", new ArrayList<String>(OmegaReborn.lifeMap.keySet()));

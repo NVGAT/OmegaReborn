@@ -20,3 +20,7 @@ commands:
     description: Sets a player's lives (ADMIN ONLY)
     usage: /<command>
     permission: omegasmp.admin
+
+  omegarevive:
+    description: Revives a banned player
+    usage: /<command>
