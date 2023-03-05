@@ -2,10 +2,12 @@ package com.notverygoodatthis.omegareborn;
 import dev.dbassett.skullcreator.SkullCreator;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
@@ -75,12 +77,17 @@ public final class OmegaReborn extends JavaPlugin implements Listener {
         }
     }
 
+    //Player death logic, managed to shrink it down to just a few lines
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e) {
+	//If the killer is a player...
         if(e.getEntity().getKiller() instanceof Player) {
+	    //We make a new OmegaPlayer object, parsing the current player into the constructor
             OmegaPlayer player = new OmegaPlayer(e.getEntity());
+	    //We decrement their lives
             player.setLives(player.getLives() - 1);
             if(player.getLives() < 1) {
+		//And if their lives are lower than one we give them an Omega ban. Simple!
                 player.omegaBan();
             }
         }
@@ -144,6 +151,13 @@ public final class OmegaReborn extends JavaPlugin implements Listener {
                     getLogger().info(String.format("%s%s has failed to apply a life item.", OMEGA_PREFIX, p.getPlayer().getName()));
                 }
             }
+        }
+    }
+
+    @EventHandler
+    public void onEntityDeath(EntityDeathEvent e) {
+        if(e.getEntity() instanceof Creeper) {
+            e.getEntity().getWorld().dropItemNaturally(e.getEntity().getLocation(), new ItemStack(Material.GUNPOWDER, 5));
         }
     }
 

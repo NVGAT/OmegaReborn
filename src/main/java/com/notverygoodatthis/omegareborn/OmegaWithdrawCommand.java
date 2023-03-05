@@ -15,7 +15,7 @@ public class OmegaWithdrawCommand implements CommandExecutor {
             OmegaPlayer player = new OmegaPlayer((Player) sender);
             //If the amount of lives is correct, we drop the lives and deduct the player's lives
             if(!(Integer.parseInt(args[0]) > player.getLives())) {
-                player.setLives(player.getLives() - 1);
+                player.setLives(player.getLives() - Integer.parseInt(args[0]));
                 player.getPlayer().getWorld().dropItemNaturally(player.getPlayer().getLocation(),
                         OmegaReborn.getOmegaItem(OmegaReborn.OmegaItemType.LIFE, Integer.parseInt(args[0])));
                 if(player.getLives() < 1) {
